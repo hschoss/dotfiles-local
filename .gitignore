@@ -1,0 +1,26 @@
+# Runtime noise
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+
+# Large/generated application state can be added here if needed.
+*.bak
+*.backup
+*.lock
+*.gz
+
+# Generated app state and caches
+packages/private/
+packages/arch-desktop/.config/pulse/cookie
+packages/media/.config/obs-studio/plugin_config/obs-websocket/config.json
+packages/private/.config/libreoffice/4/cache/
+packages/private/.config/libreoffice/4/user/extensions/
+packages/private/.config/go/telemetry/
+packages/private/.config/Nextcloud/logs/
+packages/private/.config/Nextcloud/cookies*.db
+packages/media/.config/obs-studio/logs/
+packages/media/.config/obs-studio/profiler_data/
+packages/private/.config/gh/hosts.yml
+packages/private/.config/rclone/rclone.conf

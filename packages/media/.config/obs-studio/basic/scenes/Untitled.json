@@ -222,9 +222,7 @@
             "uuid": "6ed5e714-c4b7-48f0-9e91-e6454ce231c5",
             "id": "pipewire-screen-capture-source",
             "versioned_id": "pipewire-screen-capture-source",
-            "settings": {
-                "RestoreToken": "fa10a8e2-504e-4c59-ad6f-423a9e33958c"
-            },
+            "settings": {},
             "mixers": 0,
             "sync": 0,
             "flags": 0,

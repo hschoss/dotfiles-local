@@ -1,54 +1,45 @@
 # dotfiles (local)
 
-my local dotfiles for configuring my shell, terminal and system environment, managed with [GNU Stow](https://www.gnu.org/software/stow/)
-The whole configuration is strongly inspired by [Anish
+my local dotfiles for configuring my shell, terminal and system environment,
+managed with [GNU Stow](https://www.gnu.org/software/stow/). The whole
+configuration is strongly inspired by [Anish
 Athalye](https://github.com/anishathalye/dotfiles) and his lecture at [missing
 semester](https://missing.csail.mit.edu/2026/command-line-environment/).
 
 
 this repo is an extension of the my public
-[dotfiles](https://github.com/hschoss/dotfiles) repo.  it installs local
+[dotfiles](https://github.com/hschoss/dotfiles) repo.  It installs local
 overrides such as `.bashrc.local`, `.bash_profile.local`, desktop
 configuration, and host-specific app settings.
 
-## Packages
+## packages
 
 - `local-shell`: bash local overrides and local aliases
-- `local-tmux`: bmux local overrides
+- `local-tmux`: tmux local overrides
 - `local-vim`: vim local overrides
 - `local-git`: git local overrides
-- `arch-desktop`: sway, alacritty, gtk, dconf, wallpapers, pulseaudio, yay, and desktop session config
+- `arch-desktop`: sway, alacritty, gtk, dconf, wallpapers, pulseaudio, yay, and
+  desktop session config
 - `media`: mpv, obs, zathura, kiwix
-- `private`: untracked local-only package for rclone, borg, immich, GitHub CLI auth hosts, nextcloud state, SOPS state, and other private app state
+- `private`: untracked local-only package for rclone, borg, immich, GitHub CLI
+  auth hosts, nextcloud state, SOPS state, and other private app state
 
-## Security
 
-This repository is public. Do not commit credentials, local auth state, app
-cookies, API tokens, private keys, or service-specific config files containing
-secrets. Keep those files in ignored local-only packages such as
-`packages/private/`.
-
-## Dry Run
+## installation
 
 ```sh
 ./scripts/install-local-common.sh --dry-run
 ./scripts/install-arch-desktop.sh --dry-run
 ```
 
-## Apply
+better safe than sorry...
 
 ```sh
 ./scripts/install-local-common.sh
 ./scripts/install-arch-desktop.sh
 ```
 
-## Check
-
-```sh
-./scripts/check.sh
-```
-
-## Packages 
+## my favourite packages 
 
 those are the programs i am running on my system.
 
@@ -68,7 +59,7 @@ those are the programs i am running on my system.
 * **[zathura-pdf-poppler](https://wiki.archlinux.org/title/Zathura)** - zathura
   pdf support plugin 
 
-### System
+### system
 * **[networkmanager](https://wiki.archlinux.org/title/NetworkManager)** - lets
   you connect to the wifi in overly complicated ways
 * **[pipewire](https://wiki.archlinux.org/title/PipeWire)** - server for
@@ -92,14 +83,14 @@ those are the programs i am running on my system.
 * **[wofi](https://wiki.archlinux.org/title/Wofi)** - A launcher/menu program
   for wlroots-based Wayland compositors (similar to Rofi).
 
-#### Fonts
+### fonts
 * **[noto-fonts](https://wiki.archlinux.org/title/Fonts#Noto_fonts)** - free
   font family by Google designed to cover all Unicode characters.
 * **[ttf-ms-fonts](https://wiki.archlinux.org/title/Microsoft_fonts)** -
   TrueType fonts from Microsoft you kow from Word (Arial, Times New Roman,
 etc.).
 
-### Working
+### working
 * **[vim](https://wiki.archlinux.org/title/Vim)** - highly configurable text
   editor for people with adhd
 * **[openssh](https://wiki.archlinux.org/title/OpenSSH)** - tool for remote
@@ -113,7 +104,7 @@ etc.).
 * **[wireguard-tools](https://wiki.archlinux.org/title/WireGuard)** - tools for
   configuring secure network tunnels.
 
-### Languages
+### languages
 * **[r](https://wiki.archlinux.org/title/R)** - language and environment for
   statistical computing
 * **[ruby](https://wiki.archlinux.org/title/Ruby)** - dynamic programming
@@ -121,7 +112,7 @@ etc.).
 * **[python](https://wiki.archlinux.org/title/Python)** - perfect language for
   vibe coding
 
-### Screenshot + Screenrecording
+### screenshot + screenrecording
 * **[scrot](https://wiki.archlinux.org/title/Scrot)** - screenshot tool
 * **[slurp](https://wiki.archlinux.org/title/Screen_capture#Wayland)** - linux
   version of snipping tool
@@ -130,6 +121,6 @@ etc.).
 * **[wl-clipboard](https://wiki.archlinux.org/title/Wayland#Clipboard)** -
   Command-line copy/paste utilities 
 
-### Package Management
+### package management
 * **[yay](https://wiki.archlinux.org/title/AUR_helpers#Pacman_wrappers)** - i
   rarely download stuff from the AUR

@@ -1,0 +1,11 @@
+# ~/.bashrc.local
+
+# Local aliases for tools that are only available on this machine.
+alias ff='fastfetch'
+alias k='kubectl'
+alias t='talosctl'
+
+
+if command -v path_prepend >/dev/null 2>&1; then
+    path_prepend "$HOME/.local/share/gem/ruby/3.4.0/bin"
+fi

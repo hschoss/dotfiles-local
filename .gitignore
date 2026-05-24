@@ -1,26 +1,41 @@
 # Runtime noise
-*.log
-*.tmp
 *.swp
 *.swo
 *~
 
-# Large/generated application state can be added here if needed.
-*.bak
-*.backup
-*.lock
-*.gz
+# Secrets and auth
+**/.env
+**/.env.*
+**/*token*
+**/*secret*
+**/*credential*
+**/hosts.yml
+**/rclone.conf
+**/auth.yml
+**/keys.txt
+**/cookies*.db
+**/cookie
 
-# Generated app state and caches
+# App state
+**/*.log
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.bak
+**/*.backup
+**/*.tmp
+**/*.lock
+**/*.gz
+**/logs/
+**/cache/
+**/profiler_data/
+**/registrymodifications.xcu
+
+# Private local package
 packages/private/
-packages/arch-desktop/.config/pulse/cookie
-packages/media/.config/obs-studio/plugin_config/obs-websocket/config.json
-packages/private/.config/libreoffice/4/cache/
+
+# Known generated/private app state
+packages/arch-desktop/.config/pulse/
+packages/media/.config/obs-studio/plugin_config/obs-websocket/
 packages/private/.config/libreoffice/4/user/extensions/
 packages/private/.config/go/telemetry/
-packages/private/.config/Nextcloud/logs/
-packages/private/.config/Nextcloud/cookies*.db
-packages/media/.config/obs-studio/logs/
-packages/media/.config/obs-studio/profiler_data/
-packages/private/.config/gh/hosts.yml
-packages/private/.config/rclone/rclone.conf

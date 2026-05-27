@@ -24,9 +24,17 @@ output eDP-1 resolution 2560x1600 scale 1.5 position 0 1600
 output HDMI-A-1 resolution 1080x720 position 0 0
 # output HDMI-A-1 resolution 3840x2160 position 0 0
 
-# Get the names of outputs by running: swaymsg -t get_outputs
+# swaymsg -t get_outputs
 workspace 2 output HDMI-A-1
 workspace 1 output eDP-1
+
+# mirroring
+# output eDP-1 mode 1920x1080 scale 1 position 0 0
+# output HDMI-A-1 mode 1920x1080@60Hz scale 1 position 0 0
+# workspace 1 output HDMI-A-1
+# workspace 1 output eDP-1
+
+
 
 # Automated sleeping: 
 exec swayidle -w \

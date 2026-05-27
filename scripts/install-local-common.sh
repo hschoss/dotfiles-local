@@ -19,7 +19,7 @@ packages="local-shell local-tmux local-vim local-git"
 printf "Stowing local common packages: %s\n" "$packages"
 
 if [ "$dry_run" = true ]; then
-    stow --no-folding --dir=packages --target="$HOME" --simulate --verbose $packages
+    stow --no-folding --dir=. --target="$HOME" --simulate --verbose $packages
 else
-    stow --no-folding --dir=packages --target="$HOME" $packages
+    stow --no-folding --dir=. --target="$HOME" $packages
 fi

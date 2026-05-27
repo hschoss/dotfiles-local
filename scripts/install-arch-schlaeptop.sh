@@ -15,14 +15,14 @@ if [ "$#" -ne 0 ]; then
     exit 2
 fi
 
-packages="local-shell local-tmux local-vim local-git arch-desktop media"
-if [ -d packages/private ]; then
+packages="local-shell local-tmux local-vim local-git arch-schlaeptop media"
+if [ -d private ]; then
     packages="$packages private"
 fi
-printf "Stowing Arch desktop packages: %s\n" "$packages"
+printf "Stowing arch-schlaeptop packages: %s\n" "$packages"
 
 if [ "$dry_run" = true ]; then
-    stow --no-folding --dir=packages --target="$HOME" --simulate --verbose $packages
+    stow --no-folding --dir=. --target="$HOME" --simulate --verbose $packages
 else
-    stow --no-folding --dir=packages --target="$HOME" $packages
+    stow --no-folding --dir=. --target="$HOME" $packages
 fi

@@ -32,10 +32,10 @@
 **/registrymodifications.xcu
 
 # Private local package
-packages/private/
+private/
 
 # Known generated/private app state
-packages/arch-desktop/.config/pulse/
-packages/media/.config/obs-studio/plugin_config/obs-websocket/
-packages/private/.config/libreoffice/4/user/extensions/
-packages/private/.config/go/telemetry/
+arch-schlaeptop/.config/pulse/
+media/.config/obs-studio/plugin_config/obs-websocket/
+private/.config/libreoffice/4/user/extensions/
+private/.config/go/telemetry/

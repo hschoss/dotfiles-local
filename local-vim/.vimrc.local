@@ -1,0 +1,8 @@
+" ~/.vimrc.local
+
+" Wayland clipboard: make normal yy copy to system clipboard
+set clipboard=unnamedplus
+
+" Fallback: force line yanks into wl-copy too
+nnoremap <silent> <leader>y yy:call system('wl-copy', @")<CR>
+xnoremap <silent> <leader>y y:call system('wl-copy', @")<CR>

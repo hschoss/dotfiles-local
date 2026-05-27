@@ -12,13 +12,13 @@ this repo is an extension of the my public
 overrides such as `.bashrc.local`, `.bash_profile.local`, desktop
 configuration, and host-specific app settings.
 
-## packages
+## package directories
 
 - `local-shell`: bash local overrides and local aliases
 - `local-tmux`: tmux local overrides
 - `local-vim`: vim local overrides
 - `local-git`: git local overrides
-- `arch-desktop`: sway, alacritty, gtk, dconf, wallpapers, pulseaudio, yay, and
+- `arch-schlaeptop`: sway, alacritty, gtk, dconf, wallpapers, pulseaudio, yay, and
   desktop session config
 - `media`: mpv, obs, zathura, kiwix
 - `private`: untracked local-only package for rclone, borg, immich, GitHub CLI
@@ -29,14 +29,14 @@ configuration, and host-specific app settings.
 
 ```sh
 ./scripts/install-local-common.sh --dry-run
-./scripts/install-arch-desktop.sh --dry-run
+./scripts/install-arch-schlaeptop.sh --dry-run
 ```
 
 better safe than sorry...
 
 ```sh
 ./scripts/install-local-common.sh
-./scripts/install-arch-desktop.sh
+./scripts/install-arch-schlaeptop.sh
 ```
 
 ## my favourite packages 

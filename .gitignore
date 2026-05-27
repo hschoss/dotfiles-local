@@ -39,3 +39,4 @@ arch-schlaeptop/.config/pulse/
 media/.config/obs-studio/plugin_config/obs-websocket/
 private/.config/libreoffice/4/user/extensions/
 private/.config/go/telemetry/
+packages/media/.config/obs-studio/basic/scenes/*.json

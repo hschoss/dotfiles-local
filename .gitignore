@@ -3,9 +3,12 @@
 *.swo
 *~
 
-# Secrets and auth
+# Environment files
 **/.env
 **/.env.*
+!**/.env.example
+
+# Credentials and keys
 **/*token*
 **/*secret*
 **/*credential*
@@ -13,8 +16,28 @@
 **/rclone.conf
 **/auth.yml
 **/keys.txt
+**/.git-credentials
+**/.netrc
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.agekey
+
+# Cookies and local auth state
 **/cookies*.db
 **/cookie
+**/pulse/cookie
+
+# Shell and REPL histories
+**/.bash_history
+**/.zsh_history
+**/.python_history
+**/.psql_history
+**/.mysql_history
+**/.sqlite_history
+**/.rediscli_history
+**/.lesshst
 
 # App state
 **/*.log
@@ -28,15 +51,28 @@
 **/*.gz
 **/logs/
 **/cache/
+**/.cache/
+tmp/
+logs/
 **/profiler_data/
 **/registrymodifications.xcu
 
 # Private local package
 private/
 
+# OBS generated/local state
+**/.config/obs-studio/basic/scenes/*.json
+**/.config/obs-studio/logs/
+**/.config/obs-studio/profiler_data/
+**/.config/obs-studio/plugin_config/
+**/.config/obs-studio/plugin_manager/
+**/.config/obs-studio/user.ini
+**/.config/obs-studio/crashes/
+
+# Binary local desktop state
+**/.config/dconf/user
+
 # Known generated/private app state
 arch-schlaeptop/.config/pulse/
-media/.config/obs-studio/plugin_config/obs-websocket/
 private/.config/libreoffice/4/user/extensions/
 private/.config/go/telemetry/
-packages/media/.config/obs-studio/basic/scenes/*.json

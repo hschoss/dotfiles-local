@@ -50,7 +50,7 @@ those are the programs i am running on my system.
   man pages for everyday usage
 
 ### media
-* **[mpv](https://wiki.archlinux.org/title/Mpv)** - A free, lightweight,
+* **[mpv](https://wiki.archlinux.org/title/Mpv)** - free, lightweight,
   open-source, and cross-platform media player 
 * **[yt-dlp](https://wiki.archlinux.org/title/Yt-dlp)** - cli audio and video
   downloader 
@@ -78,7 +78,7 @@ those are the programs i am running on my system.
   locker for Wayland
 * **[wireplumber](https://wiki.archlinux.org/title/WirePlumber)** - A modular
   session manager for PipeWire.
-* **[wofi](https://wiki.archlinux.org/title/Wofi)** - A launcher/menu program
+* **[wofi](https://wiki.archlinux.org/title/Wofi)** - launcher/menu program
   for wlroots-based Wayland compositors (similar to Rofi).
 
 ### fonts
@@ -105,7 +105,7 @@ etc.).
 ### languages
 * **[r](https://wiki.archlinux.org/title/R)** - language and environment for
   statistical computing
-* **[stan](https://mc-stan.org/) - for updating my prior beliefs
+* **[stan](https://mc-stan.org/)** - for updating my prior beliefs
 * **[ruby](https://wiki.archlinux.org/title/Ruby)** - dynamic programming
   language for running my blog in jekyll
 * **[python](https://wiki.archlinux.org/title/Python)** - perfect language for
@@ -113,7 +113,7 @@ etc.).
 * **[sage](https://www.sagemath.org/)** - the open source version of
   Wolframs Mathematica    
 
-## homelab
+### homelab
 
 - **[talosctl](https://www.siderolabs.com/talos-linux)** - talking to my
   nodes via an API (not ssh!)

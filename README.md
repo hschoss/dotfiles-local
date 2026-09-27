@@ -56,8 +56,6 @@ those are the programs i am running on my system.
   downloader 
 * **[wget](https://wiki.archlinux.org/title/Wget)** - cli website downloader
 * **[zathura](https://wiki.archlinux.org/title/Zathura)** - vim-like pdf viewer
-* **[zathura-pdf-poppler](https://wiki.archlinux.org/title/Zathura)** - zathura
-  pdf support plugin 
 
 ### system
 * **[networkmanager](https://wiki.archlinux.org/title/NetworkManager)** - lets
@@ -107,10 +105,22 @@ etc.).
 ### languages
 * **[r](https://wiki.archlinux.org/title/R)** - language and environment for
   statistical computing
+* **[stan](https://mc-stan.org/) - for updating my prior beliefs
 * **[ruby](https://wiki.archlinux.org/title/Ruby)** - dynamic programming
   language for running my blog in jekyll
 * **[python](https://wiki.archlinux.org/title/Python)** - perfect language for
   vibe coding
+* **[sage](https://www.sagemath.org/)** - the open source version of
+  Wolframs Mathematica    
+
+## homelab
+
+- **[talosctl](https://www.siderolabs.com/talos-linux)** - talking to my
+  nodes via an API (not ssh!)
+- **[kubectl](https://kubernetes.io/)** — running applications on my outdated hardware 
+- **[helm](https://helm.sh/)** — package manager for k8s
+- **[flux](https://fluxcd.io/)** — best practice gitops continuous-delivery
+  tool
 
 ### screenshot + screenrecording
 * **[scrot](https://wiki.archlinux.org/title/Scrot)** - screenshot tool

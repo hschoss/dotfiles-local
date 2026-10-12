@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+# pre-push hook: full-history gitleaks scan.
+#
+# Slower than pre-commit, but every push is a publication event, so this
+# is the right place to catch anything the per-commit scan missed.
+#
+# Enable alongside pre-commit by setting core.hooksPath to the directory
+# this file lives in.
+
+set -eu
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+    printf 'pre-push: gitleaks not installed; skipping history scan.\n' >&2
+    printf '          install with: pacman -S gitleaks (or similar)\n' >&2
+    exit 0
+fi
+
+if ! gitleaks git --no-banner --redact; then
+    printf 'pre-push: gitleaks found secrets in history. refusing push.\n' >&2
+    printf '          rotate the leaked credential before continuing.\n' >&2
+    exit 1
+fi

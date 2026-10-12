@@ -21,8 +21,8 @@ configuration, and host-specific app settings.
 - `arch-schlaeptop`: sway, alacritty, gtk, dconf, wallpapers, pulseaudio, yay, and
   desktop session config
 - `media`: mpv, obs, zathura, kiwix
-- `private`: untracked local-only package for rclone, borg, immich, GitHub CLI
-  auth hosts, nextcloud state, SOPS state, and other private app state
+- `private`: untracked, locally-managed package for host-private state.
+  Never committed, never pushed. Contents live only on the local machine.
 
 
 ## installation
@@ -123,9 +123,8 @@ etc.).
   tool
 
 ### screenshot + screenrecording
-* **[scrot](https://wiki.archlinux.org/title/Scrot)** - screenshot tool
-* **[slurp](https://wiki.archlinux.org/title/Screen_capture#Wayland)** - linux
-  version of snipping tool
+* **[slurp](https://wiki.archlinux.org/title/Screen_capture#Wayland)** - in
+  combination with grim and wl-copy the linux version of snipping tool
 * **[obs-studio](https://archlinux.org/packages/?name=obs-studio)** - gui
   screen recorder
 * **[wl-clipboard](https://wiki.archlinux.org/title/Wayland#Clipboard)** -

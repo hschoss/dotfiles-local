@@ -4,7 +4,17 @@ set -eu
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$repo_root"
 
-printf "Broken symlinks in repo:\n"
+printf "Tracked-but-should-be-ignored (regression check):\n"
+leaked=$(git ls-files -i --exclude-standard --cached || true)
+if [ -n "$leaked" ]; then
+    printf '%s\n' "$leaked" >&2
+    printf 'FAIL: files above are tracked but would be ignored by .gitignore.\n' >&2
+    printf 'This usually means .gitignore was tightened without untracking them.\n' >&2
+    exit 1
+fi
+printf '  (none)\n'
+
+printf "\nBroken symlinks in repo:\n"
 find . -xtype l -print
 
 printf "\nStow simulate: local common\n"

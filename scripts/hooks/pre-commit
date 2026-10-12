@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+# pre-commit hook: reject secrets and anything under private/.
+#
+# Enable with:
+#   git config --local core.hooksPath scripts/hooks
+# (or let core.hooksPath = ~/.config/git/hooks from the base dotfiles
+# pick it up after symlinking: ln -s "$PWD/scripts/hooks" ~/.config/git/hooks)
+
+set -eu
+
+# Refuse anything under private/ reaching the index.
+staged_private=$(git diff --cached --name-only --diff-filter=ACMR \
+                 | awk '/^private\// {print}')
+if [ -n "$staged_private" ]; then
+    printf 'pre-commit: refusing to commit paths under private/:\n' >&2
+    printf '  %s\n' $staged_private >&2
+    exit 1
+fi
+
+# Run gitleaks against the staged content if it is installed. Fail
+# closed on finding anything.
+if command -v gitleaks >/dev/null 2>&1; then
+    if ! gitleaks protect --staged --no-banner --redact; then
+        printf 'pre-commit: gitleaks found secrets in staged changes.\n' >&2
+        exit 1
+    fi
+else
+    printf 'pre-commit: gitleaks not installed; skipping scan.\n' >&2
+    printf '           install with: pacman -S gitleaks (or similar)\n' >&2
+fi

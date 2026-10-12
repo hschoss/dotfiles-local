@@ -1,35 +1,125 @@
-# Runtime noise
-*.swp
-*.swo
-*~
+# Allowlist model: everything is ignored by default. Add new files to
+# tracking only by opting them in explicitly here. A secret file dropped
+# into the tree cannot sneak into a commit just because its name is new.
+#
+# Keep this list in sync with `git ls-files`.
 
-# Environment files
+/*
+!/.gitignore
+!/.Rprofile
+!/README.md
+!/SECURITY.md
+
+!/docs/
+!/scripts/
+!/local-shell/
+!/local-tmux/
+!/local-vim/
+!/local-git/
+!/arch-schlaeptop/
+!/media/
+
+# docs/ — allow all markdown
+docs/*
+!docs/*.md
+
+# scripts/ — allow the install/check scripts and git hooks
+scripts/*
+!scripts/check.sh
+!scripts/install-arch-schlaeptop.sh
+!scripts/install-local-common.sh
+!scripts/unstow-all.sh
+!scripts/hooks/
+scripts/hooks/*
+!scripts/hooks/pre-commit
+!scripts/hooks/pre-push
+
+# local-shell package
+local-shell/*
+!local-shell/.bashrc.local
+!local-shell/.bash_profile.local
+
+# local-tmux, local-vim, local-git packages (currently near-empty)
+local-tmux/*
+!local-tmux/.tmux.conf.local
+local-vim/*
+!local-vim/.vimrc.local
+local-git/*
+!local-git/.gitconfig.local
+
+# arch-schlaeptop package — selectively allowlist non-sensitive config
+arch-schlaeptop/*
+!arch-schlaeptop/.config/
+arch-schlaeptop/.config/*
+!arch-schlaeptop/.config/alacritty/
+arch-schlaeptop/.config/alacritty/*
+!arch-schlaeptop/.config/alacritty/alacritty.toml
+!arch-schlaeptop/.config/alacritty/alacritty.yml
+!arch-schlaeptop/.config/mimeapps.list
+!arch-schlaeptop/.config/sway/
+arch-schlaeptop/.config/sway/*
+!arch-schlaeptop/.config/sway/config
+!arch-schlaeptop/.config/wallpapers/
+arch-schlaeptop/.config/wallpapers/*
+!arch-schlaeptop/.config/wallpapers/*.jpg
+!arch-schlaeptop/.config/wallpapers/*.png
+
+# media package
+media/*
+!media/.config/
+media/.config/*
+!media/.config/Kiwix/
+media/.config/Kiwix/*
+!media/.config/Kiwix/Kiwix-desktop.conf
+!media/.config/mpv/
+media/.config/mpv/*
+!media/.config/mpv/mpv.conf
+!media/.config/mpv/input.conf
+!media/.config/zathura/
+media/.config/zathura/*
+!media/.config/zathura/zathurarc
+!media/.config/obs-studio/
+media/.config/obs-studio/*
+!media/.config/obs-studio/global.ini
+!media/.config/obs-studio/basic/
+media/.config/obs-studio/basic/*
+!media/.config/obs-studio/basic/profiles/
+media/.config/obs-studio/basic/profiles/*
+!media/.config/obs-studio/basic/profiles/Untitled/
+media/.config/obs-studio/basic/profiles/Untitled/*
+!media/.config/obs-studio/basic/profiles/Untitled/basic.ini
+
+# Hard denylist — refuse by name even if the allowlist above would admit it.
+# Covers secret-shaped files, local app state, and the private/ package.
+private/
 **/.env
 **/.env.*
 !**/.env.example
-
-# Credentials and keys
 **/*token*
 **/*secret*
 **/*credential*
+**/*apikey*
 **/hosts.yml
 **/rclone.conf
 **/auth.yml
 **/keys.txt
+**/*.agekey
+**/age.key
+**/*.age
 **/.git-credentials
 **/.netrc
 **/*.pem
 **/*.key
 **/*.p12
 **/*.pfx
-**/*.agekey
-
-# Cookies and local auth state
-**/cookies*.db
+**/*.jks
+**/*.keystore
+**/*.ovpn
+**/wg*.conf
+**/*.wg
+**/*.enc
 **/cookie
-**/pulse/cookie
-
-# Shell and REPL histories
+**/cookies*.db
 **/.bash_history
 **/.zsh_history
 **/.python_history
@@ -38,8 +128,6 @@
 **/.sqlite_history
 **/.rediscli_history
 **/.lesshst
-
-# App state
 **/*.log
 **/*.db
 **/*.sqlite
@@ -52,27 +140,17 @@
 **/logs/
 **/cache/
 **/.cache/
-tmp/
-logs/
 **/profiler_data/
 **/registrymodifications.xcu
-
-# Private local package
-private/
-
-# OBS generated/local state
-**/.config/obs-studio/basic/scenes/*.json
+**/.config/dconf/user
+**/.config/obs-studio/user.ini
 **/.config/obs-studio/logs/
-**/.config/obs-studio/profiler_data/
 **/.config/obs-studio/plugin_config/
 **/.config/obs-studio/plugin_manager/
-**/.config/obs-studio/user.ini
 **/.config/obs-studio/crashes/
-
-# Binary local desktop state
-**/.config/dconf/user
-
-# Known generated/private app state
-arch-schlaeptop/.config/pulse/
-private/.config/libreoffice/4/user/extensions/
-private/.config/go/telemetry/
+**/.config/obs-studio/basic/scenes/*.json
+*.swp
+*.swo
+*~
+tmp/
+logs/

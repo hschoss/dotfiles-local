@@ -8,4 +8,30 @@ alias t='talosctl'
 if command -v path_prepend >/dev/null 2>&1; then
     path_prepend "$HOME/.local/share/gem/ruby/3.4.0/bin"
 fi
-[ -f "$HOME/.bashrc.private" ] && . "$HOME/.bashrc.private"
+
+# Source ~/.bashrc.private only if it is owned by us, not world/group
+# writable, and lives in a parent dir that is not world/group writable.
+# Reuses the base dotfiles' source_private when available; falls back
+# to an inline check otherwise.
+_bashrc_private_safe_source() {
+    local f=$1 mode parent parent_mode
+    [ -f "$f" ] && [ -r "$f" ] && [ -O "$f" ] || return 0
+    mode=$(stat -c %a "$f" 2>/dev/null) || return 0
+    case "${mode: -2:1}${mode: -1}" in
+        [2367]?|?[2367]) return 0 ;;
+    esac
+    parent=$(dirname -- "$f")
+    [ -O "$parent" ] || return 0
+    parent_mode=$(stat -c %a "$parent" 2>/dev/null) || return 0
+    case "${parent_mode: -2:1}${parent_mode: -1}" in
+        [2367]?|?[2367]) return 0 ;;
+    esac
+    . "$f"
+}
+
+if declare -F source_private >/dev/null 2>&1; then
+    source_private "$HOME/.bashrc.private"
+else
+    _bashrc_private_safe_source "$HOME/.bashrc.private"
+fi
+unset -f _bashrc_private_safe_source

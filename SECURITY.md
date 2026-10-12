@@ -22,27 +22,38 @@ Threat model (same as the base repo):
 
 ## Resolution status
 
-Updated as items are addressed. Commit hashes refer to the local repo.
+Each row below has a type:
 
-| ID  | Status            | Commit        | Notes |
-|-----|-------------------|---------------|-------|
-| H1  | FIXED             | `386eacd`     | `chmod 0700` applied to every directory under `~/.dotfiles-local/private/` and the live `~/.config/{sops,gh,rclone,immich,borg,age,helm,Nextcloud,cat_installer,nvim-legacy}` targets. Files remain 0600. |
-| H2  | FIXED             | `386eacd`     | `.bashrc.local` wraps `~/.bashrc.private` sourcing in a `source_private`-equivalent check (ownership, mode, parent-dir perms); uses the base helper when defined. |
-| M1  | FIXED             | `386eacd`, `73c0c1c` | README's inventory of secret stores dropped. User explicitly chose to keep the repo PUBLIC after being asked on 2026-10-13 — audit confirmed tracked content carries no secrets. The gitleaks pre-commit hook refuses future `private/` paths. |
-| M2  | AUDITED (safe)    | n/a           | `claude-cli://` URL handler `~/.local/share/applications/claude-code-url-handler.desktop` passes `%u` as a single argv entry to `/home/hannes/.local/bin/claude --handle-uri`, not through `sh -c`. Not a shell-injection path; trust delegates cleanly to the Claude binary's own URL parser. |
-| M3  | FIXED             | `386eacd`     | GTK bookmarks moved to `private/.config/gtk-3.0/bookmarks`; public tree no longer carries the username in `file://` URLs. Tracked file removed via `git rm`. |
-| M4  | FIXED             | `386eacd`     | `scripts/hooks/pre-commit` refuses any staged path under `private/`. Keeping `private/` inside the repo for stow convenience is still noted below as a long-term consideration. |
-| M5  | FIXED             | `386eacd`     | `.gitignore` is allowlist-first with denylist retained as defense-in-depth. |
-| M6  | FIXED             | `386eacd`     | `[Panels] CookieId` stripped from `media/.config/obs-studio/basic/profiles/Untitled/basic.ini`. |
-| M7  | FIXED             | `73c0c1c`     | Sway autostart of `vim ~/tracker.csv` now guards on file existing + `-O` (owned by me) + no group/other-write via `find`. |
-| L1  | FIXED             | `73c0c1c`     | Stale OBS `logs/`, `profiler_data/`, `crashes/` directories removed from the working tree; `scripts/check.sh` now reports stale app-generated junk so cleanup is routine. |
-| L2  | FIXED             | `386eacd`     | `scripts/check.sh` fails if `git ls-files -i --exclude-standard --cached` returns anything. |
-| L3  | FIXED             | `386eacd`     | Stray `arch-schlaeptop/.config/alacritty/alacritty → /usr/bin/alacritty` symlink `git rm`'d. |
-| L4  | FIXED             | `73c0c1c`     | gem bin uses `path_append`, not `path_prepend`. |
-| L5  | ADDRESSED by L4 for `.gitconfig.local`; `.tmux.conf.local`, `.vimrc.local` remain intentionally empty (user adds overrides as needed). SSH signing config now lives in `local-git/.gitconfig.local` (`73c0c1c`). |
-| L6  | FIXED             | `386eacd`     | `scripts/hooks/pre-commit` + `pre-push` committed; `core.hooksPath = scripts/hooks` set via `git config --local`. |
-| L7  | NON-ISSUE (clarified) | n/a | `.bak` files were **never tracked** (the original `.gitignore` already matched `**/*.bak`). Earlier SECURITY.md draft overstated this. Working-tree copies deleted during cleanup. |
-| L8  | ADDRESSED by M3   | n/a           | Covered by the GTK bookmarks move + M1 README scrub. |
+- **FIX** — a code / config change landed in a commit. Verified.
+- **AUDIT** — an audit was performed to decide whether a change was
+  needed. The outcome (and the evidence used to reach it) is recorded.
+- **DECISION** — the user explicitly chose how to resolve a judgment-
+  call item. The decision is recorded with its date.
+- **NON-ISSUE** — the original finding did not reflect reality.
+
+Not every security finding is a bug to patch — some are policy choices
+or draft overstatements. The language below says which, with evidence,
+so future-you can tell the difference without re-reading the transcript.
+
+| ID  | Type / Status        | Commit        | Evidence / Notes |
+|-----|----------------------|---------------|------------------|
+| H1  | FIX + verified live  | `386eacd`     | `chmod 0700` applied to every directory under `~/.dotfiles-local/private/` and the live `~/.config/{sops,gh,rclone,immich,borg,age,helm,Nextcloud,cat_installer,nvim-legacy}` targets. Files remain 0600. Re-verified 2026-10-13 with `find ... ! -perm 700` returning empty. |
+| H2  | FIX                  | `386eacd`     | `.bashrc.local` wraps `~/.bashrc.private` sourcing in a `source_private`-equivalent check (ownership, mode, parent-dir perms); uses the base helper when defined. |
+| M1  | FIX (README scrub) + DECISION (repo stays public) | `386eacd`, `73c0c1c` | **Fix:** README's enumeration of secret stores dropped on 2026-10-13 (`386eacd`); gitleaks pre-commit hook refuses future `private/` paths. **Audit evidence for keeping public:** (1) `gh repo view hschoss/dotfiles-local` confirms public; (2) `git grep` across tracked content → only `hschoss` (GitHub handle, unavoidable) and `arch-schlaeptop` as a dir name remain; (3) `gitleaks git` full history → `no leaks found`. **Decision:** User chose "No — keep it public" via `AskUserQuestion` on 2026-10-13. |
+| M2  | AUDIT → no change needed | n/a       | `~/.local/share/applications/claude-code-url-handler.desktop` has `Exec="/home/hannes/.local/bin/claude" --handle-uri %u`. `%u` is passed as a single argv entry (not via `sh -c`); trust delegates to Claude's own URL parser. Not a shell-injection path. No code change applies. |
+| M3  | FIX                  | `386eacd`     | GTK bookmarks moved to `private/.config/gtk-3.0/bookmarks` (not tracked); public tree no longer carries the username in `file://` URLs. Tracked file removed via `git rm`. |
+| M4  | FIX                  | `386eacd`     | `scripts/hooks/pre-commit` refuses any staged path under `private/`. Relocating `private/` entirely outside the repo is listed as a "longer-term" consideration below; not actioned by this review. |
+| M5  | FIX                  | `386eacd`     | `.gitignore` is allowlist-first with denylist retained as defense-in-depth. |
+| M6  | FIX                  | `386eacd`     | `[Panels] CookieId` stripped from `media/.config/obs-studio/basic/profiles/Untitled/basic.ini`. |
+| M7  | FIX                  | `73c0c1c`     | Sway autostart of `vim ~/tracker.csv` now guards on file existing + `-O` (owned by me) + no group/other-write via `find`. |
+| L1  | FIX + ONGOING helper | `73c0c1c`     | Stale OBS `logs/`, `profiler_data/`, `crashes/` directories removed from the working tree; `scripts/check.sh` now reports stale app-generated junk on every run so cleanup is routine. |
+| L2  | FIX                  | `386eacd`     | `scripts/check.sh` fails if `git ls-files -i --exclude-standard --cached` returns anything. |
+| L3  | FIX                  | `386eacd`     | Stray `arch-schlaeptop/.config/alacritty/alacritty → /usr/bin/alacritty` symlink `git rm`'d. |
+| L4  | FIX                  | `73c0c1c`     | gem bin uses `path_append`, not `path_prepend`. |
+| L5  | FIX (gitconfig.local) + policy on empty files | `73c0c1c` | SSH signing config now lives in `local-git/.gitconfig.local`. The remaining empty override files (`.tmux.conf.local`, `.vimrc.local`) are intentionally empty placeholders; adding content is a user action, not a security item. |
+| L6  | FIX                  | `386eacd`     | `scripts/hooks/pre-commit` + `pre-push` committed; `core.hooksPath = scripts/hooks` set via `git config --local`. |
+| L7  | NON-ISSUE (clarified) | n/a           | `.bak` files were **never tracked**: `git ls-files '*.bak'` returned empty. The original `.gitignore` already matched `**/*.bak`. The earlier SECURITY.md draft overstated the finding; the stray working-tree copies have been deleted. |
+| L8  | ADDRESSED by M3 + the M1 README scrub | n/a    | Covered by the public-mirror hygiene work above. Audit outcome identical to M1's. |
 
 ### On-disk hardening (not git-tracked, verified live)
 
@@ -54,33 +65,73 @@ Updated as items are addressed. Commit hashes refer to the local repo.
 | `~/.config/git/allowed_signers` | populated with user's email + pubkey |
 | Full-history `gitleaks` scan (both repos) | `no leaks found` |
 
-### On `~/.local/bin` symlink mode (not a repo item, surfaced during audit)
+### KERNEL-LIMIT: `~/.local/bin` symlink mode (surfaced during audit, not a repo item)
 
-The audit found 80 "world-writable" symlinks in `~/.local/bin` (TeX
-Live, `claude`, `codex`). This is a Linux kernel quirk, **not** an
-exposure:
+**Finding** `find ~/.local/bin -perm /o+w` reports 80 symlinks with
+mode `0777` (TeX Live, `claude`, `codex`).
 
-> **man 7 symlink**: *On Linux, the permissions of a symbolic link are
-> not used in any operation; the permissions are always 0777 (read,
-> write, and execute for all user categories), and can't be changed.*
+**Why it cannot be "fixed"**
 
-The real safeguard is the parent directory `~/.local/bin` being 0755
-and owned by `hannes`. No other local user has write access to it, so
-no entry can be created, deleted, renamed, or replaced regardless of
-the reported symlink mode. Verified with `stat` on 2026-10-13.
+> **man 7 symlink** (POSIX / Linux): *On Linux, the permissions of a
+> symbolic link are not used in any operation; the permissions are
+> always 0777 (read, write, and execute for all user categories), and
+> can't be changed.*
 
-### Longer-term considerations (not yet actioned)
+Verified in-session: `chmod -h 0755 <symlink>` on ext4 is a silent
+no-op; `stat` continues to report `0777`. There is no kernel API to
+change this.
 
-- **Move `private/` outside the dotfiles tree.** The pre-commit hook
-  catches staged paths today, but a long-term win is relocating
-  `private/` to `~/.local/share/dotfiles-private/` and pointing stow
-  there, so the secrets never share a working tree with git. Not done.
-- **Rename `arch-schlaeptop/` to a host-neutral name.** Would scrub the
-  hostname from the public tree entirely. Would require updating the
-  install scripts and `.gitignore` allowlist entries. Not done.
-- **Enable branch protection** on `hschoss/dotfiles-local` so a
-  force-push cannot overwrite history (recovery lifeline if a secret
-  ever lands). Not done.
+**Why it does not create an exposure**
+
+Access to a symlink entry is governed by the containing directory, not
+by the symlink's own stored mode. `~/.local/bin` is
+`0755 hannes:hannes` (verified 2026-10-13 with `stat`). No other
+local UID has write access to that directory, so no other UID can
+create, delete, rename, or replace any entry in it, regardless of
+`ls -l` output.
+
+**Verified security property:**
+
+- `stat -c '%a %U:%G' ~/.local/bin` → `755 hannes:hannes`
+- Resolved targets (`claude`, `codex`, `latexmk`, `pdflatex`) are
+  `0755 hannes:hannes`.
+
+This is the correct resolution for a kernel-constrained finding:
+document the constraint, verify the actual access property, record
+the evidence.
+
+### Deferred (user-decided, not security-blocking)
+
+The items below are improvements, not open findings. Each has been
+weighed against current protections; none are open vulnerabilities.
+
+- **Relocate `private/` outside the dotfiles tree** —
+  `~/.local/share/dotfiles-private/` would keep secrets off the git
+  working tree entirely. **Current mitigation:** pre-commit hook
+  refuses staged `private/` paths; `.gitignore` is allowlist-first;
+  `git ls-files -i` passes clean. Status: **deferred**, not blocking.
+- **Rename `arch-schlaeptop/` to a host-neutral name** — would scrub
+  the hostname from the public tree. **Current state:** audit
+  confirmed only directory-name usage (no file content references
+  it); user chose to keep the repo public knowing this. Status:
+  **deferred**, not blocking.
+- **Enable branch protection + GitHub secret scanning on both
+  repos** — a 1-command gh API change, not actioned here because
+  auto-mode blocked it as an account-level change. Suggested gh
+  commands:
+  ```sh
+  gh api -X PATCH repos/hschoss/dotfiles-local \
+      -f security_and_analysis[secret_scanning][status]=enabled \
+      -f security_and_analysis[secret_scanning_push_protection][status]=enabled
+  gh api -X PUT repos/hschoss/dotfiles-local/branches/main/protection \
+      -F required_status_checks=null \
+      -f enforce_admins=false \
+      -F required_pull_request_reviews=null \
+      -F restrictions=null \
+      -f allow_force_pushes=false \
+      -f allow_deletions=false
+  ```
+  Status: **deferred to user**.
 
 ---
 

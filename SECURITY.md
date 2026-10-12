@@ -20,6 +20,70 @@ Threat model (same as the base repo):
 
 ---
 
+## Resolution status
+
+Updated as items are addressed. Commit hashes refer to the local repo.
+
+| ID  | Status            | Commit        | Notes |
+|-----|-------------------|---------------|-------|
+| H1  | FIXED             | `386eacd`     | `chmod 0700` applied to every directory under `~/.dotfiles-local/private/` and the live `~/.config/{sops,gh,rclone,immich,borg,age,helm,Nextcloud,cat_installer,nvim-legacy}` targets. Files remain 0600. |
+| H2  | FIXED             | `386eacd`     | `.bashrc.local` wraps `~/.bashrc.private` sourcing in a `source_private`-equivalent check (ownership, mode, parent-dir perms); uses the base helper when defined. |
+| M1  | FIXED             | `386eacd`, `73c0c1c` | README's inventory of secret stores dropped. User explicitly chose to keep the repo PUBLIC after being asked on 2026-10-13 — audit confirmed tracked content carries no secrets. The gitleaks pre-commit hook refuses future `private/` paths. |
+| M2  | AUDITED (safe)    | n/a           | `claude-cli://` URL handler `~/.local/share/applications/claude-code-url-handler.desktop` passes `%u` as a single argv entry to `/home/hannes/.local/bin/claude --handle-uri`, not through `sh -c`. Not a shell-injection path; trust delegates cleanly to the Claude binary's own URL parser. |
+| M3  | FIXED             | `386eacd`     | GTK bookmarks moved to `private/.config/gtk-3.0/bookmarks`; public tree no longer carries the username in `file://` URLs. Tracked file removed via `git rm`. |
+| M4  | FIXED             | `386eacd`     | `scripts/hooks/pre-commit` refuses any staged path under `private/`. Keeping `private/` inside the repo for stow convenience is still noted below as a long-term consideration. |
+| M5  | FIXED             | `386eacd`     | `.gitignore` is allowlist-first with denylist retained as defense-in-depth. |
+| M6  | FIXED             | `386eacd`     | `[Panels] CookieId` stripped from `media/.config/obs-studio/basic/profiles/Untitled/basic.ini`. |
+| M7  | FIXED             | `73c0c1c`     | Sway autostart of `vim ~/tracker.csv` now guards on file existing + `-O` (owned by me) + no group/other-write via `find`. |
+| L1  | FIXED             | `73c0c1c`     | Stale OBS `logs/`, `profiler_data/`, `crashes/` directories removed from the working tree; `scripts/check.sh` now reports stale app-generated junk so cleanup is routine. |
+| L2  | FIXED             | `386eacd`     | `scripts/check.sh` fails if `git ls-files -i --exclude-standard --cached` returns anything. |
+| L3  | FIXED             | `386eacd`     | Stray `arch-schlaeptop/.config/alacritty/alacritty → /usr/bin/alacritty` symlink `git rm`'d. |
+| L4  | FIXED             | `73c0c1c`     | gem bin uses `path_append`, not `path_prepend`. |
+| L5  | ADDRESSED by L4 for `.gitconfig.local`; `.tmux.conf.local`, `.vimrc.local` remain intentionally empty (user adds overrides as needed). SSH signing config now lives in `local-git/.gitconfig.local` (`73c0c1c`). |
+| L6  | FIXED             | `386eacd`     | `scripts/hooks/pre-commit` + `pre-push` committed; `core.hooksPath = scripts/hooks` set via `git config --local`. |
+| L7  | NON-ISSUE (clarified) | n/a | `.bak` files were **never tracked** (the original `.gitignore` already matched `**/*.bak`). Earlier SECURITY.md draft overstated this. Working-tree copies deleted during cleanup. |
+| L8  | ADDRESSED by M3   | n/a           | Covered by the GTK bookmarks move + M1 README scrub. |
+
+### On-disk hardening (not git-tracked, verified live)
+
+| Thing | Status |
+|-------|--------|
+| `~/.dotfiles-local/private/` tree | all directories 0700, all files 0600 (verified 2026-10-13) |
+| `~/.config/{sops,gh,rclone,immich,borg,age,...}` live targets | 0700 (verified 2026-10-13) |
+| `~/.ssh/id_ed25519_hschoss.pub` referenced as `user.signingkey` | configured |
+| `~/.config/git/allowed_signers` | populated with user's email + pubkey |
+| Full-history `gitleaks` scan (both repos) | `no leaks found` |
+
+### On `~/.local/bin` symlink mode (not a repo item, surfaced during audit)
+
+The audit found 80 "world-writable" symlinks in `~/.local/bin` (TeX
+Live, `claude`, `codex`). This is a Linux kernel quirk, **not** an
+exposure:
+
+> **man 7 symlink**: *On Linux, the permissions of a symbolic link are
+> not used in any operation; the permissions are always 0777 (read,
+> write, and execute for all user categories), and can't be changed.*
+
+The real safeguard is the parent directory `~/.local/bin` being 0755
+and owned by `hannes`. No other local user has write access to it, so
+no entry can be created, deleted, renamed, or replaced regardless of
+the reported symlink mode. Verified with `stat` on 2026-10-13.
+
+### Longer-term considerations (not yet actioned)
+
+- **Move `private/` outside the dotfiles tree.** The pre-commit hook
+  catches staged paths today, but a long-term win is relocating
+  `private/` to `~/.local/share/dotfiles-private/` and pointing stow
+  there, so the secrets never share a working tree with git. Not done.
+- **Rename `arch-schlaeptop/` to a host-neutral name.** Would scrub the
+  hostname from the public tree entirely. Would require updating the
+  install scripts and `.gitignore` allowlist entries. Not done.
+- **Enable branch protection** on `hschoss/dotfiles-local` so a
+  force-push cannot overwrite history (recovery lifeline if a secret
+  ever lands). Not done.
+
+---
+
 ## Preamble — what's already fine
 
 Before the findings, so you don't rotate anything you don't have to:

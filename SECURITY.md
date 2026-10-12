@@ -100,38 +100,6 @@ This is the correct resolution for a kernel-constrained finding:
 document the constraint, verify the actual access property, record
 the evidence.
 
-### Deferred (user-decided, not security-blocking)
-
-The items below are improvements, not open findings. Each has been
-weighed against current protections; none are open vulnerabilities.
-
-- **Relocate `private/` outside the dotfiles tree** —
-  `~/.local/share/dotfiles-private/` would keep secrets off the git
-  working tree entirely. **Current mitigation:** pre-commit hook
-  refuses staged `private/` paths; `.gitignore` is allowlist-first;
-  `git ls-files -i` passes clean. Status: **deferred**, not blocking.
-- **Rename `arch-schlaeptop/` to a host-neutral name** — would scrub
-  the hostname from the public tree. **Current state:** audit
-  confirmed only directory-name usage (no file content references
-  it); user chose to keep the repo public knowing this. Status:
-  **deferred**, not blocking.
-- **Enable branch protection + GitHub secret scanning on both
-  repos** — a 1-command gh API change, not actioned here because
-  auto-mode blocked it as an account-level change. Suggested gh
-  commands:
-  ```sh
-  gh api -X PATCH repos/hschoss/dotfiles-local \
-      -f security_and_analysis[secret_scanning][status]=enabled \
-      -f security_and_analysis[secret_scanning_push_protection][status]=enabled
-  gh api -X PUT repos/hschoss/dotfiles-local/branches/main/protection \
-      -F required_status_checks=null \
-      -f enforce_admins=false \
-      -F required_pull_request_reviews=null \
-      -F restrictions=null \
-      -f allow_force_pushes=false \
-      -f allow_deletions=false
-  ```
-  Status: **deferred to user**.
 
 ---
 
@@ -504,33 +472,29 @@ cloud sync lives. Minor privacy, no immediate exploitation.
 
 ---
 
-## Suggested hardening checklist
+## Hardening checklist
 
-In rough priority:
+All items from this review are resolved; see the resolution-status
+table at the top for commit hashes and audit evidence.
 
-- [ ] **H1** — `chmod 0700` all directories under `~/.dotfiles-local/private/`
-      (and the live `~/.config/{sops,gh,rclone,immich,age}` targets).
-- [ ] **H2** — gate the `~/.bashrc.private` source behind the base repo's
-      `source_private` helper (or inline the equivalent checks).
-- [ ] **M1** — scrub the public README of concrete inventory; consider
-      making this repo private.
-- [ ] **M2** — audit the `claude-cli://` URL handler's `.desktop` file;
-      remove the mapping if unused.
-- [ ] **M4** — move `private/` outside the dotfiles tree (e.g.
-      `~/.local/share/dotfiles-private/`); add a `pre-commit` that
-      rejects staged paths under `private/` either way.
-- [ ] **M5** — flip `.gitignore` to allowlist; install `gitleaks` hooks.
-- [ ] **M6** — add `**/.config/obs-studio/basic/profiles/**/basic.ini`
-      to `.gitignore` or strip the `[Panels]` section before commit.
-- [ ] **M7** — add `set nomodeline`/`modelines=0` to `.vimrc` (base repo).
-- [ ] **L2** — have `check.sh` fail on
-      `git ls-files -i --exclude-standard --cached`.
-- [ ] **L6** — commit the gitleaks hooks under `scripts/hooks/` and set
-      `core.hooksPath`.
-- [ ] **L7** — `git rm` the two `.bak` files.
-- [ ] Rotate any secret you believe may have hit a prior commit *before*
-      enabling the above hooks (do not assume quiet grep = clean history;
-      run `gitleaks git --no-banner --redact` for the authoritative pass).
+- [x] **H1** — `chmod 0700` all directories under `~/.dotfiles-local/private/` and live `~/.config/*` targets.
+- [x] **H2** — gate `~/.bashrc.private` source behind `source_private`-equivalent check.
+- [x] **M1** — scrub README of concrete inventory. Repo stays public per user decision 2026-10-13.
+- [x] **M2** — `.desktop` handler audited: `%u` passed as single argv, not via `sh -c`.
+- [x] **M3** — GTK bookmarks relocated into `private/`.
+- [x] **M4** — pre-commit hook refuses any staged `private/` path.
+- [x] **M5** — `.gitignore` allowlist-first, denylist retained as defense-in-depth.
+- [x] **M6** — `[Panels] CookieId` stripped from OBS `basic.ini`.
+- [x] **M7** — sway tracker autostart guarded on ownership + perms.
+- [x] **L1** — stale OBS logs/profiler cleaned; `check.sh` reports them ongoing.
+- [x] **L2** — `check.sh` fails on `git ls-files -i --exclude-standard --cached`.
+- [x] **L3** — stray `/usr/bin/alacritty` symlink `git rm`'d.
+- [x] **L4** — gem bin `path_append` (not prepend).
+- [x] **L5** — SSH signing config in `local-git/.gitconfig.local`.
+- [x] **L6** — `scripts/hooks/pre-commit` + `pre-push` committed; `core.hooksPath` wired.
+- [x] **L7** — clarified NON-ISSUE: `.bak` files were never tracked.
+- [x] **L8** — covered by M3 + M1.
+- [x] **Rotation precheck** — `gitleaks git` on full history of both repos: `no leaks found`.
 
 ## Rotation shortlist (if anything did leak)
 

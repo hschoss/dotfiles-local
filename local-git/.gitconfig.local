@@ -1,2 +1,17 @@
 # ~/.gitconfig.local
+#
+# Machine identity + signing config. The base dotfiles config (which
+# turns on commit.gpgsign + gpg.format = ssh) includes this file, so
+# user.signingkey must point to a valid SSH pubkey — otherwise commits
+# will refuse to sign.
 
+[user]
+	name = hschoss
+	email = hannes.schoss@posteo.de
+	signingkey = ~/.ssh/id_ed25519_hschoss.pub
+
+[gpg "ssh"]
+	# Allowed signers file: used to verify your own signatures locally
+	# (`git log --show-signature`). Populate with one line per key:
+	# "<email> namespaces=\"git\" ssh-ed25519 AAAA..."
+	allowedSignersFile = ~/.config/git/allowed_signers

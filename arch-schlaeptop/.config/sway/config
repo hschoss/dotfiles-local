@@ -199,4 +199,7 @@ colors {
 
 include /etc/sway/config.d/*
 
-exec alacritty -e vim ~/tracker.csv
+# Only auto-open the tracker if the file exists AND is owned by me AND
+# is not group/other-writable — otherwise another tool could feed vim a
+# crafted file at session start.
+exec sh -c 'f=$HOME/tracker.csv; [ -f "$f" ] && [ -O "$f" ] && [ -z "$(find "$f" -maxdepth 0 \( -perm -g+w -o -perm -o+w \) 2>/dev/null)" ] && exec alacritty -e vim "$f"'

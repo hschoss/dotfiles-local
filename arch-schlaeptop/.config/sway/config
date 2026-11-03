@@ -19,10 +19,20 @@ set $browser firefox		# web browser
 # Wallpaper (cycles through /usr/share/backgrounds/sway/)
 output * bg ~/.config/wallpapers/windows-xp.jpg fill
 
-# Monitor configuration:
-output eDP-1 resolution 2560x1600 scale 1.5 position 0 1600
-# output HDMI-A-1 resolution 1080x720 position 0 0
-output HDMI-A-1 resolution 3840x2160 position 0 0
+# External monitor
+output HDMI-A-1 mode 1920x1080@60Hz scale 1 position 0 0
+
+# Internal laptop display
+output eDP-1 mode 2560x1600@60Hz scale 1.5 position 0 1600
+
+
+output HDMI-A-1 adaptive_sync off
+output HDMI-A-1 scale 1 position 0 0
+
+output eDP-1 scale 1.5 position 1920 0
+
+
+
 
 # swaymsg -t get_outputs
 # workspace 2 output HDMI-A-1
@@ -36,7 +46,10 @@ output HDMI-A-1 resolution 3840x2160 position 0 0
 
 
 
-# Automated sleeping: 
+# Secret storage daemon (Nextcloud etc. use org.freedesktop.secrets)
+exec gnome-keyring-daemon --start --components=secrets
+
+# Automated sleeping:
 exec swayidle -w \
          timeout 3000 'swaylock -f -c 000000' \
          timeout 6000 'swaymsg "output * power off"' \

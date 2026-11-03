@@ -27,17 +27,23 @@ configuration, and host-specific app settings.
 
 ## installation
 
+First install the [base dotfiles](https://github.com/hschoss/dotfiles). Then,
+in this repo, dry-run before applying:
+
 ```sh
-./scripts/install-local-common.sh --dry-run
-./scripts/install-arch-schlaeptop.sh --dry-run
+./scripts/install-common.sh --dry-run           # local-shell, local-tmux, local-vim, local-git
+./scripts/install-arch-schlaeptop.sh --dry-run  # the above plus the host-specific tree
 ```
 
 better safe than sorry...
 
 ```sh
-./scripts/install-local-common.sh
+./scripts/install-common.sh
 ./scripts/install-arch-schlaeptop.sh
 ```
+
+Validate the setup at any time with `./scripts/check.sh`. Remove the managed
+symlinks with `./scripts/unstow-all.sh --dry-run && ./scripts/unstow-all.sh`.
 
 ## my favourite packages 
 

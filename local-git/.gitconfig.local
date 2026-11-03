@@ -10,6 +10,9 @@
 	email = hannes.schoss@posteo.de
 	signingkey = ~/.ssh/id_ed25519_hschoss.pub
 
+[credential]
+	helper = /usr/bin/gh auth git-credential
+
 [gpg "ssh"]
 	# Allowed signers file: used to verify your own signatures locally
 	# (`git log --show-signature`). Populate with one line per key:

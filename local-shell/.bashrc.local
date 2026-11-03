@@ -5,6 +5,9 @@ alias ff='fastfetch'
 alias k='kubectl'
 alias t='talosctl'
 
+# CmdStan install location (used by cmdstanr / cmdstanpy and by `make` in the tree).
+export CMDSTAN="$HOME/.local/opt/cmdstan"
+
 # Append (not prepend) the gem bin so gem-installed wrappers cannot
 # shadow system commands with the same name.
 if command -v path_append >/dev/null 2>&1; then

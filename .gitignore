@@ -27,8 +27,10 @@ docs/*
 scripts/*
 !scripts/check.sh
 !scripts/install-arch-schlaeptop.sh
-!scripts/install-local-common.sh
+!scripts/install-common.sh
 !scripts/unstow-all.sh
+!scripts/packages.sh
+!scripts/common.sh
 !scripts/hooks/
 scripts/hooks/*
 !scripts/hooks/pre-commit
